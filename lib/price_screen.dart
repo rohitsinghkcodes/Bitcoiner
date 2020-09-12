@@ -7,6 +7,10 @@ import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+const String apiKey1 = '617047AA-7907-4A83-A6B0-2BDB85E6A82A';
+const String apiKey2 = '8932D663-D778-44B5-9ED5-B5773DB582A3';
+const String apiKey3 = '6D3FE9C0-7FDC-4597-8DFF-C08033AD657B';
+
 class PriceScreen extends StatefulWidget {
   @override
   _PriceScreenState createState() => _PriceScreenState();
@@ -86,7 +90,7 @@ class _PriceScreenState extends State<PriceScreen> {
 
   Future<dynamic> getCurrency(String crypto, String selectedCurrency) async {
     http.Response response = await http.get(
-        'https://rest.coinapi.io/v1/exchangerate/$crypto/$selectedCurrency?apikey=617047AA-7907-4A83-A6B0-2BDB85E6A82A');
+        'https://rest.coinapi.io/v1/exchangerate/$crypto/$selectedCurrency?apikey=$apiKey2');
 
     if (response.statusCode == 200) {
       String data = response.body;
@@ -122,7 +126,8 @@ class _PriceScreenState extends State<PriceScreen> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                     child: Text(
                       '1 BTC = $Value0 $selectedCurrency',
                       textAlign: TextAlign.center,
@@ -140,7 +145,8 @@ class _PriceScreenState extends State<PriceScreen> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                     child: Text(
                       '1 ETH = $Value1 $selectedCurrency',
                       textAlign: TextAlign.center,
@@ -152,14 +158,14 @@ class _PriceScreenState extends State<PriceScreen> {
                   ),
                 ),
                 Card(
-                  
                   color: Colors.blue[700],
                   elevation: 5.0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                     child: Text(
                       '1 LTC = $Value2 $selectedCurrency',
                       textAlign: TextAlign.center,
