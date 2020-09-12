@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'coin_data.dart';
 import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -12,6 +15,8 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   String selectedCurrency = 'USD';
 
+  double convertedCurrency;
+  int newCurrency;
   //Dropdown for android function
   DropdownButton<String> getAndroidDropdown() {
     List<DropdownMenuItem<String>> dropItemsList = [];
@@ -28,6 +33,7 @@ class _PriceScreenState extends State<PriceScreen> {
         onChanged: (value) {
           setState(() {
             selectedCurrency = value;
+            getCurrency(selectedCurrency);
           });
         });
   }
@@ -44,28 +50,37 @@ class _PriceScreenState extends State<PriceScreen> {
     return CupertinoPicker(
       backgroundColor: Colors.blue[700],
       itemExtent: 33,
-      onSelectedItemChanged: (selectedIndex) {},
+      onSelectedItemChanged: (selectedIndex) {
+        selectedCurrency = pickerItems[selectedIndex].toString();
+        getCurrency(selectedCurrency);
+      },
       children: pickerItems,
     );
   }
 
-  //Method for fetching the currency
+  //first run method
   @override
   void initState() {
     super.initState();
-    getCurrency();
+    setState(() {
+      selectedCurrency = 'USD';
+    });
+    getCurrency(selectedCurrency);
   }
 
-  void getCurrency() async {
+  void getCurrency(String selectedCurrency) async {
     http.Response response = await http.get(
-        'https://rest.coinapi.io/v1/exchangerate/BTC/USD?apikey=617047AA-7907-4A83-A6B0-2BDB85E6A82A');
-    
+        'https://rest.coinapi.io/v1/exchangerate/BTC/$selectedCurrency?apikey=617047AA-7907-4A83-A6B0-2BDB85E6A82A');
 
     if (response.statusCode == 200) {
       String data = response.body;
-      print(data);
+      convertedCurrency = jsonDecode(data)['rate'];
+      setState(() {
+        newCurrency = convertedCurrency.toInt();
+      });
+      print(newCurrency);
     } else {
-      print(response.statusCode);
+      print('statuscode: ${response.statusCode}');
     }
   }
 
@@ -94,7 +109,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = ? USD',
+                  '1 BTC = $newCurrency USD',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
