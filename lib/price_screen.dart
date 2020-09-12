@@ -30,12 +30,13 @@ class _PriceScreenState extends State<PriceScreen> {
     List<DropdownMenuItem<String>> dropItemsList = [];
     for (String currency in currenciesList) {
       var newItem = DropdownMenuItem(
-        child: Text(currency),
+        child: Text(currency,style: TextStyle(fontSize: 26.0),),
         value: currency,
       );
       dropItemsList.add(newItem);
     }
     return DropdownButton<String>(
+      iconSize: 30.0,
         value: selectedCurrency,
         items: dropItemsList,
         onChanged: (value) {
