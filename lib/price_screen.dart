@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'coin_data.dart';
 import 'dart:io' show Platform;
+import 'package:http/http.dart' as http;
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -32,9 +33,8 @@ class _PriceScreenState extends State<PriceScreen> {
   }
 
   //picker for iOS function
-  CupertinoPicker getiOsPicker()
-  {
-     List<Text> pickerItems = [];
+  CupertinoPicker getiOsPicker() {
+    List<Text> pickerItems = [];
     for (String currency in currenciesList) {
       pickerItems.add(Text(
         currency,
@@ -42,11 +42,31 @@ class _PriceScreenState extends State<PriceScreen> {
       ));
     }
     return CupertinoPicker(
-              backgroundColor: Colors.blue[700],
-              itemExtent: 33,
-              onSelectedItemChanged: (selectedIndex) {},
-              children: pickerItems,
-            );
+      backgroundColor: Colors.blue[700],
+      itemExtent: 33,
+      onSelectedItemChanged: (selectedIndex) {},
+      children: pickerItems,
+    );
+  }
+
+  //Method for fetching the currency
+  @override
+  void initState() {
+    super.initState();
+    getCurrency();
+  }
+
+  void getCurrency() async {
+    http.Response response = await http.get(
+        'https://rest.coinapi.io/v1/exchangerate/BTC/USD?apikey=617047AA-7907-4A83-A6B0-2BDB85E6A82A');
+    
+
+    if (response.statusCode == 200) {
+      String data = response.body;
+      print(data);
+    } else {
+      print(response.statusCode);
+    }
   }
 
   @override
