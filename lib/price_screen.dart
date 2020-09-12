@@ -17,6 +17,10 @@ class _PriceScreenState extends State<PriceScreen> {
 
   double convertedCurrency;
   int newCurrency;
+
+  int Value0;
+  int Value1;
+  int Value2;
   //Dropdown for android function
   DropdownButton<String> getAndroidDropdown() {
     List<DropdownMenuItem<String>> dropItemsList = [];
@@ -33,7 +37,7 @@ class _PriceScreenState extends State<PriceScreen> {
         onChanged: (value) {
           setState(() {
             selectedCurrency = value;
-            getCurrency(selectedCurrency);
+            bitTicker(selectedCurrency);
           });
         });
   }
@@ -52,7 +56,7 @@ class _PriceScreenState extends State<PriceScreen> {
       itemExtent: 33,
       onSelectedItemChanged: (selectedIndex) {
         selectedCurrency = pickerItems[selectedIndex].toString();
-        getCurrency(selectedCurrency);
+        bitTicker(selectedCurrency);
       },
       children: pickerItems,
     );
@@ -65,20 +69,29 @@ class _PriceScreenState extends State<PriceScreen> {
     setState(() {
       selectedCurrency = 'USD';
     });
-    getCurrency(selectedCurrency);
+    bitTicker(selectedCurrency);
   }
 
-  void getCurrency(String selectedCurrency) async {
+  //Handling multiple bitcoin versions
+  void bitTicker(String selectCurr) async {
+    int Valuebtc = await getCurrency(cryptoList[0], selectedCurrency);
+    int ValueEth = await getCurrency(cryptoList[1], selectedCurrency);
+    int ValueLtc = await getCurrency(cryptoList[2], selectedCurrency);
+    setState(() {
+      Value0 = Valuebtc;
+      Value1 = ValueEth;
+      Value2 = ValueLtc;
+    });
+  }
+
+  Future<dynamic> getCurrency(String crypto, String selectedCurrency) async {
     http.Response response = await http.get(
-        'https://rest.coinapi.io/v1/exchangerate/BTC/$selectedCurrency?apikey=617047AA-7907-4A83-A6B0-2BDB85E6A82A');
+        'https://rest.coinapi.io/v1/exchangerate/$crypto/$selectedCurrency?apikey=617047AA-7907-4A83-A6B0-2BDB85E6A82A');
 
     if (response.statusCode == 200) {
       String data = response.body;
       convertedCurrency = jsonDecode(data)['rate'];
-      setState(() {
-        newCurrency = convertedCurrency.toInt();
-      });
-      print(newCurrency);
+      return convertedCurrency.toInt();
     } else {
       print('statuscode: ${response.statusCode}');
     }
@@ -100,23 +113,64 @@ class _PriceScreenState extends State<PriceScreen> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.blue[700],
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = $newCurrency USD',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
+            child: Column(
+              children: [
+                Card(
+                  color: Colors.blue[700],
+                  elevation: 5.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+                    child: Text(
+                      '1 BTC = $Value0 $selectedCurrency',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Card(
+                  color: Colors.blue[700],
+                  elevation: 5.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+                    child: Text(
+                      '1 ETH = $Value1 $selectedCurrency',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                Card(
+                  
+                  color: Colors.blue[700],
+                  elevation: 5.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+                    child: Text(
+                      '1 LTC = $Value2 $selectedCurrency',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Container(
