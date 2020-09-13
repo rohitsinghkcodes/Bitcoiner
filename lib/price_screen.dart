@@ -1,15 +1,11 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'coin_data.dart';
 import 'dart:io' show Platform;
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'apiResponse.dart';
 
-const String apiKey1 = '617047AA-7907-4A83-A6B0-2BDB85E6A82A';
-const String apiKey2 = '8932D663-D778-44B5-9ED5-B5773DB582A3';
-const String apiKey3 = '6D3FE9C0-7FDC-4597-8DFF-C08033AD657B';
+
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -17,14 +13,10 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
+  //Declarations
   String selectedCurrency = 'USD';
+  int value0, value1, value2;
 
-  double convertedCurrency;
-  int newCurrency;
-
-  int Value0;
-  int Value1;
-  int Value2;
   //Dropdown for android function
   DropdownButton<String> getAndroidDropdown() {
     List<DropdownMenuItem<String>> dropItemsList = [];
@@ -60,8 +52,7 @@ class _PriceScreenState extends State<PriceScreen> {
       backgroundColor: Colors.blue[700],
       itemExtent: 33,
       onSelectedItemChanged: (selectedIndex) {
-        selectedCurrency = pickerItems[selectedIndex].toString();
-        bitTicker(selectedCurrency);
+        //No functionality yet
       },
       children: pickerItems,
     );
@@ -79,27 +70,14 @@ class _PriceScreenState extends State<PriceScreen> {
 
   //Handling multiple bitcoin versions
   void bitTicker(String selectCurr) async {
-    int Valuebtc = await getCurrency(cryptoList[0], selectedCurrency);
-    int ValueEth = await getCurrency(cryptoList[1], selectedCurrency);
-    int ValueLtc = await getCurrency(cryptoList[2], selectedCurrency);
+    int valuebtc = await getCurrency(cryptoList[0], selectedCurrency);
+    int valueEth = await getCurrency(cryptoList[1], selectedCurrency);
+    int valueLtc = await getCurrency(cryptoList[2], selectedCurrency);
     setState(() {
-      Value0 = Valuebtc;
-      Value1 = ValueEth;
-      Value2 = ValueLtc;
+      value0 = valuebtc;
+      value1 = valueEth;
+      value2 = valueLtc;
     });
-  }
-
-  Future<dynamic> getCurrency(String crypto, String selectedCurrency) async {
-    http.Response response = await http.get(
-        'https://rest.coinapi.io/v1/exchangerate/$crypto/$selectedCurrency?apikey=$apiKey2');
-
-    if (response.statusCode == 200) {
-      String data = response.body;
-      convertedCurrency = jsonDecode(data)['rate'];
-      return convertedCurrency.toInt();
-    } else {
-      print('statuscode: ${response.statusCode}');
-    }
   }
 
   @override
@@ -130,7 +108,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     padding:
                         EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                     child: Text(
-                      '1 BTC = $Value0 $selectedCurrency',
+                      '1 BTC = $value0 $selectedCurrency',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20.0,
@@ -149,7 +127,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     padding:
                         EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                     child: Text(
-                      '1 ETH = $Value1 $selectedCurrency',
+                      '1 ETH = $value1 $selectedCurrency',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20.0,
@@ -168,7 +146,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     padding:
                         EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                     child: Text(
-                      '1 LTC = $Value2 $selectedCurrency',
+                      '1 LTC = $value2 $selectedCurrency',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20.0,
