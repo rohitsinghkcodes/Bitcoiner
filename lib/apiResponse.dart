@@ -9,7 +9,7 @@ const String apiKey3 = '6D3FE9C0-7FDC-4597-8DFF-C08033AD657B';
 
  Future<dynamic> getCurrency(String crypto, String selectedCurrency) async {
     http.Response response = await http.get(
-        'https://rest.coinapi.io/v1/exchangerate/$crypto/$selectedCurrency?apikey=$apiKey2');
+        'https://rest.coinapi.io/v1/exchangerate/$crypto/$selectedCurrency?apikey=$apiKey3');
 
     if (response.statusCode == 200) {
       String data = response.body;
