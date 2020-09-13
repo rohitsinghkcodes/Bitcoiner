@@ -1,11 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'coin_data.dart';
 import 'dart:io' show Platform;
 import 'apiResponse.dart';
-
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -15,20 +13,23 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   //Declarations
   String selectedCurrency = 'USD';
-  int value0, value1, value2;
+  String value0, value1, value2;
 
   //Dropdown for android function
   DropdownButton<String> getAndroidDropdown() {
     List<DropdownMenuItem<String>> dropItemsList = [];
     for (String currency in currenciesList) {
       var newItem = DropdownMenuItem(
-        child: Text(currency,style: TextStyle(fontSize: 26.0),),
+        child: Text(
+          currency,
+          style: TextStyle(fontSize: 26.0),
+        ),
         value: currency,
       );
       dropItemsList.add(newItem);
     }
     return DropdownButton<String>(
-      iconSize: 30.0,
+        iconSize: 30.0,
         value: selectedCurrency,
         items: dropItemsList,
         onChanged: (value) {
@@ -70,13 +71,16 @@ class _PriceScreenState extends State<PriceScreen> {
 
   //Handling multiple bitcoin versions
   void bitTicker(String selectCurr) async {
+    value0 = 'Loading...';
+    value1 = 'Loading...';
+    value2 = 'Loading...';
     int valuebtc = await getCurrency(cryptoList[0], selectedCurrency);
     int valueEth = await getCurrency(cryptoList[1], selectedCurrency);
     int valueLtc = await getCurrency(cryptoList[2], selectedCurrency);
     setState(() {
-      value0 = valuebtc;
-      value1 = valueEth;
-      value2 = valueLtc;
+      value0 = valuebtc.toString();
+      value1 = valueEth.toString();
+      value2 = valueLtc.toString();
     });
   }
 
@@ -108,7 +112,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     padding:
                         EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                     child: Text(
-                      '1 BTC = $value0 $selectedCurrency',
+                      '1 BTC  =  $value0  $selectedCurrency',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20.0,
@@ -127,7 +131,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     padding:
                         EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                     child: Text(
-                      '1 ETH = $value1 $selectedCurrency',
+                      '1 ETH  =  $value1  $selectedCurrency',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20.0,
@@ -146,7 +150,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     padding:
                         EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                     child: Text(
-                      '1 LTC = $value2 $selectedCurrency',
+                      '1 LTC  =  $value2  $selectedCurrency',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20.0,
